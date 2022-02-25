@@ -1,4 +1,6 @@
-import java.util.Scanner;
+package com.jwd.epam.task;
+
+import com.jwd.epam.task.Controller;
 
 public class Main {
     public static void main(String[] args) {

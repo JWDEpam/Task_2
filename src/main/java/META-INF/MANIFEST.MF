@@ -1,3 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: Main
-
+com.jwd.epam.task.Main-Class: com.jwd.epam.task.Main

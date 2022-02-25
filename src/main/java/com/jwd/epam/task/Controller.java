@@ -1,3 +1,5 @@
+package com.jwd.epam.task;
+
 import java.util.Scanner;
 
 public class Controller {

@@ -1,3 +1,5 @@
+package com.jwd.epam.task;
+
 import java.util.regex.*;
 public class Logic {
     protected static double solvePrimer(String s){
