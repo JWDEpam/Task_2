@@ -1,47 +1,34 @@
 package com.jwd.epam.task;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.util.ArrayList;
 import java.util.regex.*;
 public class Logic {
-    protected static double solvePrimer(String s){
-        double group9_10_11;
-        double group7_8_9_10_11;
-        double group3_4_5;
-        double group1_2_3_4_5;
-        double answer;
-        final Pattern p = Pattern.compile("^(\\d+)([+\\-*/])\\((\\d+)([+\\-*/])(\\d+)\\)([*/\\-+])\\((\\d+)([+\\-/*])\\((\\d+)([+\\-*/])(\\d+)\\)\\)");
-        Matcher m = p.matcher(s);
-        boolean matches = m.matches();
-        if (!matches){
-            throw new RuntimeException("Неправильный вид примера");
+    protected static Integer solvePrimer(String s){
+        int answer;
+        ArrayList<Integer> skobki = new ArrayList<>();
+        ArrayList<Integer> skobki_reshenie = new ArrayList<>();
+        final Pattern zero = Pattern.compile("/0"); // проверка на входной ноль
+        final Pattern p = Pattern.compile("(\\((\\d+)([+\\-*/])(\\d+)\\))");// раскрытие скобок
+        final Pattern p2 = Pattern.compile("((\\d+)([*/])(\\d+))"); // умножение и деление
+        final Pattern p3 = Pattern.compile("((\\d+)([+\\-])(\\d+))"); // сложение и вычитание
+        Matcher m = zero.matcher(s);
+        if (m.matches()){
+            throw new RuntimeException("Деление на ноль в примере");
         }
-        //1 действие
-        double group9 = Double.parseDouble(m.group(9));
-        String group10 = m.group(10); //знак
-        double group11 = Double.parseDouble(m.group(11));
-        group9_10_11 =solve(group9,group11,group10);
-        //2
-        double group7 = Double.parseDouble(m.group(7));
-        String group8 = m.group(8); //знак
-        group7_8_9_10_11 = solve(group7,group9_10_11,group8);
-        //3
-        double group3 = Double.parseDouble(m.group(3));
-        String group4 = m.group(4); //знак
-        double group5 = Double.parseDouble(m.group(5));
-        group3_4_5 = solve(group3,group5,group4);
-        //4
-        double group1 = Double.parseDouble(m.group(1));
-        String group2 = m.group(2); //знак
-        group1_2_3_4_5 = solve(group1,group3_4_5,group2);
-        //5
-        String group6 = m.group(6); //знак
-        answer = solve(group1_2_3_4_5,group7_8_9_10_11,group6);
-
+        s = doMath(p,s);
+        s = doMath(p2,s);
+        s = doMath(p3,s);
+        answer = Integer.parseInt(s);
         return answer;
     }
 
 
-    private static double solve(double a, double b, String c){
-        double answer = 0;
+
+    private static int solve(int a, int b, String c){
+        int answer = 0;
         switch (c){
             case "+":
                 answer = a + b;
@@ -66,6 +53,20 @@ public class Logic {
 
     }
 
-
+    private static String doMath(Pattern p, String s){
+        String s1 = s;
+        Matcher m = p.matcher(s1);
+        for (int i =0;i<m.groupCount();i++){
+            m = p.matcher(s1);
+            while(m.find()) {
+                int a = Integer.parseInt(m.group(2));// 1 число
+                String operator = m.group(3);// оператор
+                int b = Integer.parseInt(m.group(4));// 2 число
+                int solve = solve(a,b,operator);
+                s1 =s1.replace(m.group(1),String.valueOf(solve));
+            }
+        }
+        return s1;
+    }
 
 }
